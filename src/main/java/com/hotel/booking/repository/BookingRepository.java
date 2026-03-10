@@ -23,5 +23,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.status = 'CONFIRMED' " +
             "AND MONTH(b.checkInDate) = MONTH(CURRENT_DATE) " +
             "AND YEAR(b.checkInDate) = YEAR(CURRENT_DATE)")
+
     Double calculateRevenueThisMonth(@Param("hotel") Hotel hotel);
 }
