@@ -3,6 +3,7 @@ package com.hotel.booking.controller;
 import com.hotel.booking.dto.RoomRequestDto;
 import com.hotel.booking.dto.RoomSummaryResponseDto;
 import com.hotel.booking.service.RoomService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,14 +38,14 @@ public class RoomController {
     @PostMapping("/api/hotels/{id}/rooms")
     public ResponseEntity<RoomSummaryResponseDto> addRoomToHotel(
             @PathVariable Long id,
-            @RequestBody RoomRequestDto requestDto) {
+            @Valid @RequestBody RoomRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(roomService.addRoomToHotel(id, requestDto));
     }
 
     @PutMapping("/api/rooms/{id}")
     public ResponseEntity<RoomSummaryResponseDto> updateRoom(
             @PathVariable Long id,
-            @RequestBody RoomRequestDto requestDto) {
+            @Valid @RequestBody RoomRequestDto requestDto) {
         return ResponseEntity.ok(roomService.updateRoom(id, requestDto));
     }
 

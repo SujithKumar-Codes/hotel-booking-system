@@ -4,6 +4,7 @@ import com.hotel.booking.dto.BookingSummaryResponseDto;
 import com.hotel.booking.dto.GuestRequestDto;
 import com.hotel.booking.dto.GuestResponseDto;
 import com.hotel.booking.service.GuestService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class GuestController {
     private GuestService guestService;
 
     @PostMapping
-    public ResponseEntity<GuestResponseDto> createGuest(@RequestBody GuestRequestDto requestDto) {
+    public ResponseEntity<GuestResponseDto> createGuest(@Valid @RequestBody GuestRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(guestService.createGuest(requestDto));
     }
 

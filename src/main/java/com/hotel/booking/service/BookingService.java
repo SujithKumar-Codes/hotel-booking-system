@@ -45,7 +45,7 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setCheckInDate(requestDto.getCheckInDate());
         booking.setCheckOutDate(requestDto.getCheckOutDate());
-        booking.setStatus(BookingStatus.PENDING);
+        booking.setStatus(BookingStatus.CONFIRMED);
         booking.setGuest(guest);
         booking.setRoom(room);
 

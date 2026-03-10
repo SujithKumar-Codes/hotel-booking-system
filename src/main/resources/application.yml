@@ -2,7 +2,7 @@ spring:
   application:
     name: booking-system
   profiles:
-    active: dev
+    active: prod
 
 ---
 spring:
@@ -36,7 +36,7 @@ spring:
     url: jdbc:mysql://localhost:3306/hoteldb
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: yourpassword
+    password: Sujith@123
   jpa:
     hibernate:
       ddl-auto: update
