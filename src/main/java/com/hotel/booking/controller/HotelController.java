@@ -2,6 +2,7 @@ package com.hotel.booking.controller;
 
 import com.hotel.booking.dto.HotelDetailResponseDto;
 import com.hotel.booking.dto.HotelRequestDto;
+import com.hotel.booking.dto.HotelStatsResponseDto;
 import com.hotel.booking.dto.HotelSummaryResponseDto;
 import com.hotel.booking.service.HotelService;
 import jakarta.validation.Valid;
@@ -46,5 +47,11 @@ public class HotelController {
     public ResponseEntity<Void> deleteHotel(@PathVariable Long id) {
         hotelService.deleteHotel(id);
         return ResponseEntity.noContent().build();
+    }
+
+//    BONUS (Hotel stats)
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<HotelStatsResponseDto> getHotelStats(@PathVariable Long id) {
+        return ResponseEntity.ok(hotelService.getHotelStats(id));
     }
 }

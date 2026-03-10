@@ -1,12 +1,12 @@
 package com.hotel.booking.service;
 
-import com.hotel.booking.dto.HotelDetailResponseDto;
-import com.hotel.booking.dto.HotelRequestDto;
-import com.hotel.booking.dto.HotelSummaryResponseDto;
-import com.hotel.booking.dto.RoomSummaryResponseDto;
+import com.hotel.booking.dto.*;
+import com.hotel.booking.entity.BookingStatus;
 import com.hotel.booking.entity.Hotel;
 import com.hotel.booking.exception.HotelNotFoundException;
+import com.hotel.booking.repository.BookingRepository;
 import com.hotel.booking.repository.HotelRepository;
+import com.hotel.booking.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +20,12 @@ public class HotelService {
 
     @Autowired
     private HotelRepository hotelRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     public Page<HotelSummaryResponseDto> getAllHotels(Pageable pageable) {
         return hotelRepository.findAll(pageable)
@@ -109,6 +115,24 @@ public class HotelService {
         Hotel hotel = hotelRepository.findById(id)
                         .orElseThrow(() -> new HotelNotFoundException("Hotel not found with the id: " + id));
         hotelRepository.delete(hotel);
+    }
+
+
+//    BONUS (Hotel stats)
+    public HotelStatsResponseDto getHotelStats(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(() -> new HotelNotFoundException("Hotel not found with id: " + hotelId));
+
+        Long totalRooms = roomRepository.countByHotel(hotel);
+        Long activeBookings = bookingRepository.countByRoomHotelAndStatus(hotel, BookingStatus.CONFIRMED);
+        Double revenue = bookingRepository.calculateRevenueThisMonth(hotel);
+
+        HotelStatsResponseDto dto = new HotelStatsResponseDto();
+        dto.setTotalRooms(totalRooms);
+        dto.setActiveBookings(activeBookings);
+        dto.setRevenueThisMonth(revenue != null ? revenue : 0.0);
+
+        return dto;
     }
 
 }

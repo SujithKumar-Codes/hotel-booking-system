@@ -19,6 +19,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
+    private String confirmationNumber;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "guest_id")
     private Guest guest;

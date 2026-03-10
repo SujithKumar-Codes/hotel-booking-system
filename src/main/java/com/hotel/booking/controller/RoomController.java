@@ -54,4 +54,14 @@ public class RoomController {
         roomService.deleteRoomById(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    //    BONUS - Get rooms for the price range
+    @GetMapping("/api/rooms")
+    public ResponseEntity<List<RoomSummaryResponseDto>> getRoomsByPriceRange(
+            @RequestParam Double minPrice,
+            @RequestParam Double maxPrice) {
+        return ResponseEntity.ok(roomService.getRoomsByPriceRange(minPrice, maxPrice));
+    }
+
 }

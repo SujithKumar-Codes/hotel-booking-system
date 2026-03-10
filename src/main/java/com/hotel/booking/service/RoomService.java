@@ -105,4 +105,20 @@ public class RoomService {
         roomRepository.delete(room);
     }
 
+
+//    BONUS
+    public List<RoomSummaryResponseDto> getRoomsByPriceRange(Double minPrice, Double maxPrice) {
+        return roomRepository.findByPricePerNightBetween(minPrice, maxPrice)
+                .stream()
+                .map(room -> {
+                    RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
+                    dto.setId(room.getId());
+                    dto.setRoomNumber(room.getRoomNumber());
+                    dto.setType(room.getType());
+                    dto.setPricePerNight(room.getPricePerNight());
+                    dto.setIsAvailable(room.getIsAvailable());
+                    return dto;
+                }).toList();
+    }
+
 }

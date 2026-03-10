@@ -15,6 +15,8 @@ import com.hotel.booking.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class BookingService {
 
@@ -46,6 +48,10 @@ public class BookingService {
         booking.setCheckInDate(requestDto.getCheckInDate());
         booking.setCheckOutDate(requestDto.getCheckOutDate());
         booking.setStatus(BookingStatus.CONFIRMED);
+
+//        Setting Confirmation number
+        booking.setConfirmationNumber(UUID.randomUUID().toString());
+
         booking.setGuest(guest);
         booking.setRoom(room);
 
@@ -59,6 +65,7 @@ public class BookingService {
         dto.setCheckInDate(savedBooking.getCheckInDate());
         dto.setCheckOutDate(savedBooking.getCheckOutDate());
         dto.setStatus(savedBooking.getStatus());
+        dto.setConfirmationNumber(savedBooking.getConfirmationNumber());
 
         GuestResponseDto guestDto = new GuestResponseDto();
         guestDto.setId(guest.getId());

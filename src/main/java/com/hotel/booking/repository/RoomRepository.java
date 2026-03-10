@@ -17,4 +17,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r WHERE r.hotel.city = :city AND r.isAvailable = true AND r.id NOT IN " +
             "(SELECT b.room.id FROM Booking b WHERE b.checkInDate <= :date AND b.checkOutDate > :date)")
     List<Room> findAvailableRoomsByCityAndDate(@Param("city") String city, @Param("date") LocalDate date);
+
+//  BONUS
+    List<Room> findByPricePerNightBetween(Double minPrice, Double maxPrice);
+
+    Long countByHotel(Hotel hotel);
 }

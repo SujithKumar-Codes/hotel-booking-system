@@ -10,6 +10,7 @@ public class BookingDetailResponseDto {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private BookingStatus status;
+    private String confirmationNumber;
     private GuestResponseDto guest;
     private RoomSummaryResponseDto room;
 }
