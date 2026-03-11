@@ -94,6 +94,7 @@ public class BookingService {
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());
         dto.setStatus(booking.getStatus());
+        dto.setConfirmationNumber(booking.getConfirmationNumber());
 
         GuestResponseDto guestDto = new GuestResponseDto();
         guestDto.setId(booking.getGuest().getId());
