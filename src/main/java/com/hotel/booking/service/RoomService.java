@@ -6,6 +6,7 @@ import com.hotel.booking.entity.Hotel;
 import com.hotel.booking.entity.Room;
 import com.hotel.booking.exception.HotelNotFoundException;
 import com.hotel.booking.exception.RoomNotFoundException;
+import com.hotel.booking.mapper.RoomMapper;
 import com.hotel.booking.repository.HotelRepository;
 import com.hotel.booking.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,57 +25,35 @@ public class RoomService {
     @Autowired
     private HotelRepository hotelRepository;
 
+    @Autowired
+    private RoomMapper roomMapper;
+
+
     public Page<RoomSummaryResponseDto> getRoomsByHotel(Long hotelId, Pageable pageable) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new HotelNotFoundException("Hotel not found with id: " + hotelId));
 
         return roomRepository.findByHotel(hotel, pageable)
-                .map(room -> {
-                    RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
-                    dto.setId(room.getId());
-                    dto.setRoomNumber(room.getRoomNumber());
-                    dto.setType(room.getType());
-                    dto.setPricePerNight(room.getPricePerNight());
-                    dto.setIsAvailable(room.getIsAvailable());
-                    return dto;
-                });
+                .map(room -> roomMapper.toSummaryDto(room));
     }
 
     public List<RoomSummaryResponseDto> getAvailableRooms(String city, LocalDate date) {
         return roomRepository.findAvailableRoomsByCityAndDate(city, date)
                 .stream()
-                .map(room -> {
-                    RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
-                    dto.setId(room.getId());
-                    dto.setRoomNumber(room.getRoomNumber());
-                    dto.setType(room.getType());
-                    dto.setPricePerNight(room.getPricePerNight());
-                    dto.setIsAvailable(room.getIsAvailable());
-                    return dto;
-                }).toList();
+                .map(room -> roomMapper.toSummaryDto(room))
+                .toList();
     }
 
     public RoomSummaryResponseDto addRoomToHotel(Long hotelId, RoomRequestDto requestDto) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new HotelNotFoundException("Hotel not found with id: " + hotelId));
 
-        Room room = new Room();
-        room.setRoomNumber(requestDto.getRoomNumber());
-        room.setType(requestDto.getType());
-        room.setPricePerNight(requestDto.getPricePerNight());
-        room.setIsAvailable(requestDto.getIsAvailable());
+        Room room = roomMapper.toEntity(requestDto);
         room.setHotel(hotel);
 
         Room savedRoom = roomRepository.save(room);
 
-        RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
-        dto.setId(savedRoom.getId());
-        dto.setRoomNumber(savedRoom.getRoomNumber());
-        dto.setType(savedRoom.getType());
-        dto.setPricePerNight(savedRoom.getPricePerNight());
-        dto.setIsAvailable(savedRoom.getIsAvailable());
-
-        return dto;
+        return roomMapper.toSummaryDto(savedRoom);
     }
 
     public RoomSummaryResponseDto updateRoom(Long id, RoomRequestDto requestDto) {
@@ -88,14 +67,7 @@ public class RoomService {
 
         Room updatedRoom = roomRepository.save(room);
 
-        RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
-        dto.setId(updatedRoom.getId());
-        dto.setRoomNumber(updatedRoom.getRoomNumber());
-        dto.setType(updatedRoom.getType());
-        dto.setPricePerNight(updatedRoom.getPricePerNight());
-        dto.setIsAvailable(updatedRoom.getIsAvailable());
-
-        return dto;
+        return roomMapper.toSummaryDto(updatedRoom);
     }
 
     public void deleteRoomById(Long id) {
@@ -106,19 +78,12 @@ public class RoomService {
     }
 
 
-//    BONUS
+    //    BONUS
     public List<RoomSummaryResponseDto> getRoomsByPriceRange(Double minPrice, Double maxPrice) {
         return roomRepository.findByPricePerNightBetween(minPrice, maxPrice)
                 .stream()
-                .map(room -> {
-                    RoomSummaryResponseDto dto = new RoomSummaryResponseDto();
-                    dto.setId(room.getId());
-                    dto.setRoomNumber(room.getRoomNumber());
-                    dto.setType(room.getType());
-                    dto.setPricePerNight(room.getPricePerNight());
-                    dto.setIsAvailable(room.getIsAvailable());
-                    return dto;
-                }).toList();
+                .map(room -> roomMapper.toSummaryDto(room))
+                .toList();
     }
 
 }
